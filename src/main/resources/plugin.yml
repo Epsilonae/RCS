@@ -1,0 +1,27 @@
+name: RCS
+version: '1.0'
+main: org.rcs.Main
+api-version: '1.21'
+authors: [ Epsilonae ]
+commands:
+  info:
+    description: Displays role description or roles list.
+    permission: rcscommand.use
+    usage: /info <role | list>
+  startgame:
+    description: Starts a new game.
+    permission: rcscommand.admin
+    usage: /startgame
+  stopgame:
+    description: Stops the current game.
+    permission: rcscommand.admin
+    usage: /stopgame
+  setmap:
+    description: Defines the game area.
+    permission: rcscommand.admin
+    usage: /setmap <x, z, length> | <reset>
+permissions:
+  rcscommand.use:
+    default: true
+  rcscommand.admin:
+    default: op
