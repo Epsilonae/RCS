@@ -19,9 +19,9 @@ I haven't tested the plugin with cracked Minecraft accounts, so it may not work 
 - **Random Item Inventories:** Periodically, an inventory with a random item opens for everyone. Each player can pick a random item.
 
 - **Interface Display:**
+  - **Tablist:** Displays the player Y-level, the other players' roles and the lowest Y-level before taking damage.
   - **Bossbar:** Displays the remaining time before the next inventory opens.
   - **Experience:** Displays the player's progress.
-  - **Tab:** Displays the roles of other players.
 
 - **Disconnect Protection:** Players who disconnect are reset to avoid abuse.
 
@@ -45,7 +45,8 @@ I haven't tested the plugin with cracked Minecraft accounts, so it may not work 
 ## Configuration
 
 You can customize the description, name, items, and effects of each role in the plugin's `config.yml`.  
-Here is an example of the role structure. You can specify the quantity of items using the format `<Item>:<Quantity>`:
+You can specify the quantity of items using the format `<Item>:<Quantity>`. You can also specify the effect level using the format `<Effect>:<Amplifier>`.
+Here is an example of the role structure :
 ```
 roles:
   example:
@@ -59,11 +60,12 @@ roles:
     - IRON_SWORD:1
     - GOLDEN_APPLE:5
     effects:
-    - SPEED:2
+    - SPEED:1
 ```
 
 You can customize the content and interval for the inventory appearance in the plugin's `config.yml`.  
-Here is an example of the inventory structure. The interval is in seconds. You can specify the quantity of items using the format `<Item>:<Quantity>`:
+The interval is in seconds. You can specify the quantity of items using the format `<Item>:<Quantity>`
+Here is an example of the inventory structure :
 ```
 inventory:
   interval: 300
@@ -72,7 +74,8 @@ inventory:
 ```
 
 You can customize the interval and maximum height for the minimum level system in the plugin's `config.yml`.  
-Here is an example of the minimum level system structure. The interval is in seconds (minimum 15s), and the maximum height is `y=320`:
+The interval is in seconds (minimum 15s), and the maximum height is `y=320`.
+Here is an example of the minimum level system structure :
 ```
 void:
   interval: 30
@@ -80,7 +83,7 @@ void:
 ```
 
 You can customize the death messages in the plugin's `config.yml`.  
-Here is an example of the death message structure:
+Here is an example of the death message structure :
 ```
 death_message:
   suicide: died by himself

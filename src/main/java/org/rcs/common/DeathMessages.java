@@ -24,7 +24,7 @@ public class DeathMessages implements Listener {
         } else {
             message = player.getName() + " " + config.getSuicideMessage();
         }
-        Component componentMessage = Component.text(message).color(TextColor.color(0xFFFFFF));
+        Component componentMessage = Component.text(message).color(TextColor.color(0xC0C0C0));
         Bukkit.broadcast(componentMessage);
     }
     
