@@ -19,9 +19,9 @@ public class Main extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        game = new GameManager();
         configManager = new ConfigManager();
         configManager.initializeConfig();
+        game = new GameManager();
 
         instance = this;
 

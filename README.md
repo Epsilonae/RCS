@@ -51,14 +51,15 @@ Here is an example of the role structure :
 ```
 roles:
   example:
-    description: Role example
+    description: Role example, can be deleted
     armor:
       helmet: IRON_HELMET
-      chestplate: IRON_CHESTPLATE
+      chestplate: IRON_CHESTPLATE-PROTECTION:4,UNBREAKING:3
       leggings: ''
       boots: ''
     items:
-    - IRON_SWORD:1
+    - IRON_SWORD
+    - SPLASH_POTION:2-STRENGTH:1,8
     - GOLDEN_APPLE:5
     effects:
     - SPEED:1

@@ -3,6 +3,7 @@ package org.rcs.config;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -55,12 +56,12 @@ public class ConfigManager {
     }
 
     private void createDefaultConfig() {
-        config.set(ROLES_PATH + "example.description", "Role example");
+        config.set(ROLES_PATH + "example.description", "Role example, can be deleted");
         config.set(ROLES_PATH + "example.armor.helmet", "IRON_HELMET");
-        config.set(ROLES_PATH + "example.armor.chestplate", "IRON_CHESTPLATE");
+        config.set(ROLES_PATH + "example.armor.chestplate", "IRON_CHESTPLATE-PROTECTION:4,UNBREAKING:3");
         config.set(ROLES_PATH + "example.armor.leggings", "");
         config.set(ROLES_PATH + "example.armor.boots", "");
-        config.set(ROLES_PATH + "example.items", List.of("IRON_SWORD:1", "GOLDEN_APPLE:5"));
+        config.set(ROLES_PATH + "example.items", List.of("IRON_SWORD","SPLASH_POTION:2-STRENGTH:1,8", "GOLDEN_APPLE:5"));
         config.set(ROLES_PATH + "example.effects", List.of("SPEED:1"));
 
         config.set(INVENTORY_PATH + "interval", 300);
@@ -231,29 +232,32 @@ public class ConfigManager {
         return config.getString(ROLES_PATH + roleName + ".description");
     }
 
-    private ItemStack getItemFromConfig(String path) {
-        String materialName = config.getString(path);
-        if (materialName == null || materialName.isEmpty()) {
-            return new ItemStack(Material.AIR);
-        }
-
-        Material material = Material.matchMaterial(materialName.toUpperCase());
-        if (material == null) {
-            logger.log(Level.WARNING, "'{0}' item is invalid in the configuration file.", materialName);
-            return new ItemStack(Material.AIR);
-        }
-
-        return new ItemStack(material);
-    }
-
     public Map<String, ItemStack> getRoleArmor(String roleName) {
-        Map<String, ItemStack> armor = new HashMap<>();
-        armor.put("helmet", getItemFromConfig(ROLES_PATH + roleName + ".armor.helmet"));
-        armor.put("chestplate", getItemFromConfig(ROLES_PATH + roleName + ".armor.chestplate"));
-        armor.put("leggings", getItemFromConfig(ROLES_PATH + roleName + ".armor.leggings"));
-        armor.put("boots", getItemFromConfig(ROLES_PATH + roleName + ".armor.boots"));
-        return armor;
+        String helmetPath = ROLES_PATH + roleName + ".armor.helmet";
+        String chestplatePath = ROLES_PATH + roleName + ".armor.chestplate";
+        String leggingsPath = ROLES_PATH + roleName + ".armor.leggings";
+        String bootsPath = ROLES_PATH + roleName + ".armor.boots";
+    
+        List<String> armorPaths;
+        armorPaths = Arrays.asList(
+                config.getString(helmetPath),
+                config.getString(chestplatePath),
+                config.getString(leggingsPath),
+                config.getString(bootsPath)
+        );
+    
+        List<ItemStack> armorItems = convertStringsToItems(armorPaths);
+    
+        Map<String, ItemStack> armorMap = new HashMap<>();
+        String[] armorTypes = {"helmet", "chestplate", "leggings", "boots"};
+    
+        for (int i = 0; i < armorTypes.length; i++) {
+            ItemStack item = (i < armorItems.size()) ? armorItems.get(i) : null;
+            armorMap.put(armorTypes[i], item != null ? item : new ItemStack(Material.AIR));
+        }
+        return armorMap;
     }
+    
     
 
     public List<ItemStack> getRoleItems(String roleName) {
