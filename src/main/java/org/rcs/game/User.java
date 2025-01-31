@@ -21,7 +21,7 @@ public class User {
     
     private final Player player;
     private final String name;
-    private final ConfigManager config;
+    private final ConfigManager config = new ConfigManager();
     private final World overworld;
     private final int win;
     private final Set<String> roleKilled;
@@ -31,13 +31,12 @@ public class User {
     public User(Player player) {
         this.player = player;
         this.name = player.getName();
-        this.config = new ConfigManager();
-        this.overworld = Bukkit.getWorld("world");
+        this.overworld = Bukkit.getWorld(config.getWorldName());
         this.win = config.getRoles().size();
         this.roleKilled = new HashSet<>();
 
         if (overworld == null) {
-            throw new IllegalStateException("The world 'world' was not found.");
+            throw new IllegalStateException("The world " + config.getWorldName() + " was not found.");
         }
     }
 

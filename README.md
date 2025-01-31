@@ -39,13 +39,14 @@ I haven't tested the plugin with cracked Minecraft accounts, so it may not work 
 
 - `/startgame`: Starts a new game.
 - `/stopgame`: Stops the current game.
-- `/info <role|list>`: Displays role descriptions or the list of roles. Example: `/info Warrior`.
+- `/info <role | list>`: Displays role descriptions or the list of roles. Example: `/info Warrior`.
 - `/setmap <x, z, length> | <reset>`: Defines the game area by specifying the center coordinates `<x> <z>` and the length of one side `<length>` (must be between 5 and 320 blocks). You can also reset the game area with `/setmap reset`.
 
 ## Configuration
 
 You can customize the description, name, items, and effects of each role in the plugin's `config.yml`.  
-You can specify the quantity of items using the format `<Item>:<Quantity>`. You can also specify the effect level using the format `<Effect>:<Amplifier>`.
+You can specify the specifics of an item using the format `<Item:Quantity-Enchantment:Level,...>`. For potions you should use `<Item:Quantity-Effect:Amplifier,Duration>`. 
+You can also specify the effect level using the format `<Effect:Amplifier,Duration>`.
 Here is an example of the role structure :
 ```
 roles:
@@ -63,8 +64,9 @@ roles:
     - SPEED:1
 ```
 
-You can customize the content and interval for the inventory appearance in the plugin's `config.yml`.  
-The interval is in seconds. You can specify the quantity of items using the format `<Item>:<Quantity>`
+You can customize the content and interval for the inventory appearance in the plugin's `config.yml`.
+You can specify the specifics of an item using the format `<Item:Quantity-Enchantment:Level,...>`. For potions you should use `<Item:Quantity-Effect:Amplifier,Duration>`.
+The interval is in seconds.
 Here is an example of the inventory structure :
 ```
 inventory:
@@ -80,6 +82,13 @@ Here is an example of the minimum level system structure :
 void:
   interval: 30
   max: 150
+```
+
+You can customize the world that is used to play in the plugin's `config.yml`.
+Here is an example of the world used structure :
+```
+world:
+  name: world
 ```
 
 You can customize the death messages in the plugin's `config.yml`.  

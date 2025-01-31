@@ -7,16 +7,21 @@ import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.rcs.Main;
+import org.rcs.config.ConfigManager;
 
 public class SetmapCommand implements CommandExecutor {
+
+    private final ConfigManager config = new ConfigManager();
 
     private final String SYSTEM_PREFIX = "§6[RCS]§r ";
     private final String RESET_MESSAGE = SYSTEM_PREFIX + "§aThe game area has been reset.";
     private final String SUCCESS_MESSAGE = SYSTEM_PREFIX + "§aThe game area has been updated. Center = §e%s§a, §e%s§a, Side = §e%d";
     private final String INCORRECT_LENGTH_MESSAGE = SYSTEM_PREFIX + "§cLength must be between 5 and 320.";
     private final String INVALID_ARGUMENTS_MESSAGE = SYSTEM_PREFIX + "§cCoordinates and length must be valid numbers.";
-    private final String WORLD_NOT_FOUND_MESSAGE = SYSTEM_PREFIX + "§cThe world 'world' was not found.";
+    private final String WORLD_NOT_FOUND_MESSAGE = SYSTEM_PREFIX + "§cThe world " + config.getWorldName() + " was not found.";
     private final String PERMISSION_ERROR_MESSAGE = SYSTEM_PREFIX + "§cYou do not have permission to execute this command.";
+    private final String GAME_STARTED_ERROR = SYSTEM_PREFIX + "§cA game is already started.";
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -26,7 +31,12 @@ public class SetmapCommand implements CommandExecutor {
             return true;
         }
         
-        World overworld = Bukkit.getWorld("world");
+        if (Main.game.isGameOn()) {
+            sender.sendMessage(GAME_STARTED_ERROR);
+            return true;
+        }
+        
+        World overworld = Bukkit.getWorld(config.getWorldName());
         if (overworld == null) {
             sender.sendMessage(WORLD_NOT_FOUND_MESSAGE);
             return false;

@@ -6,7 +6,7 @@
 
     <groupId>org.rcs</groupId>
     <artifactId>RCS</artifactId>
-    <version>1.0</version>
+    <version>1.21-1.0</version>
     <packaging>jar</packaging>
 
     <name>RCS</name>

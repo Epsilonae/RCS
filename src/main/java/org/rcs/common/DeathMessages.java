@@ -8,7 +8,6 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.rcs.config.ConfigManager;
 
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.TextColor;
 
 public class DeathMessages implements Listener {
 
@@ -20,11 +19,11 @@ public class DeathMessages implements Listener {
         Player killer = player.getKiller();
         String message;
         if (killer != null) {
-            message = player.getName() + " " + config.getRandomDeathMessage() + " " + killer.getName();
+            message = "§c" + player.getName() + "§7 " + config.getRandomDeathMessage() + "§6 " + killer.getName();
         } else {
-            message = player.getName() + " " + config.getSuicideMessage();
+            message = "§c" + player.getName() + "§7 " + config.getSuicideMessage();
         }
-        Component componentMessage = Component.text(message).color(TextColor.color(0xC0C0C0));
+        Component componentMessage = Component.text(message);
         Bukkit.broadcast(componentMessage);
     }
     

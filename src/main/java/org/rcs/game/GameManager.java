@@ -20,13 +20,19 @@ import org.rcs.inventory.InventoryGUI;
 import org.rcs.roles.EquipRole;
 
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.JoinConfiguration;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.title.TitlePart;
 
 public class GameManager {
 
-    private static final int RESPAWN_INTERVAL = 15;
+    private static final int RESPAWN_INTERVAL = 10;
     private static final long GAME_LOOP_TICK_INTERVAL = 20L;
+
+    private final Component SYSTEM_PREFIX = Component.text("[RCS]").color(TextColor.color(0xFFAA00));
+    private final Component GAME_STARTED_MESSAGE = Component.text("The game has successfully started.").color(TextColor.color(0x55FF55));
+    private final Component GAME_STOPPED_MESSAGE = Component.text("The game has been stopped.").color(TextColor.color(0xFF5555));
+    
 
     public final Map<String, User> usersMapList = new HashMap<>();
     public List<String> rolesAvailable;
@@ -36,13 +42,12 @@ public class GameManager {
     private BukkitRunnable gameTask;
 
     private final int inventoryTime;
-    private final ConfigManager config;
-    private final World overworld = Bukkit.getWorld("world");
+    private final ConfigManager config = new ConfigManager();;
+    private final World overworld = Bukkit.getWorld(config.getWorldName());
     private final MapVoid mapVoid;
     private BossbarManager bossbarManager;
 
     public GameManager() {
-        this.config = new ConfigManager();
         this.mapVoid = new MapVoid();
         this.inventoryTime = config.getInventoryInterval();
         overworld.setGameRule(GameRule.ANNOUNCE_ADVANCEMENTS, false);
@@ -129,7 +134,9 @@ public class GameManager {
         resetGameState();
         this.bossbarManager = new BossbarManager("Next Chest", 0.0f);
         this.bossbarManager.showToAll();
-        this.mapVoid.newLayer();
+        this.mapVoid.startLayer();
+        Component message = Component.join(JoinConfiguration.separator(Component.text(" ")), SYSTEM_PREFIX, GAME_STARTED_MESSAGE);
+        Bukkit.broadcast(message);
         initializePlayers();
 
         this.gameOn = true;
@@ -168,6 +175,9 @@ public class GameManager {
         bossbarManager.reset();
         usersMapList.clear();
         stopGameLoop();
+        
+        Component message = Component.join(JoinConfiguration.separator(Component.text(" ")), SYSTEM_PREFIX, GAME_STOPPED_MESSAGE);
+        Bukkit.broadcast(message);
     }
     
 
@@ -198,6 +208,7 @@ public class GameManager {
 
     private void handleInventoryEvents() {
         if ((gameTime + 1) % inventoryTime == 0) {
+            bossbarManager.addProgress(0f);
             for (Player player : Bukkit.getOnlinePlayers()) {
                 InventoryGUI inventory = new InventoryGUI();
                 inventory.initializeInventory();

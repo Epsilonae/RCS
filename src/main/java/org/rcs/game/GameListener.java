@@ -40,8 +40,10 @@ public class GameListener implements Listener {
         if (!(event.getEntity() instanceof Player player)) return;
 
         if (event.getCause() == EntityDamageEvent.DamageCause.VOID) {
-            player.removePotionEffect(PotionEffectType.DARKNESS);
-            player.addPotionEffect(new PotionEffect(PotionEffectType.DARKNESS, 20, 1));
+            if (game.isGameOn()) {
+                player.removePotionEffect(PotionEffectType.DARKNESS);
+                player.addPotionEffect(new PotionEffect(PotionEffectType.DARKNESS, 20, 1));
+            }
         }
     }
 
@@ -50,6 +52,10 @@ public class GameListener implements Listener {
         if (game == null || !game.isGameOn()) return;
 
         Player player = event.getPlayer();
+        if (player.getGameMode() == GameMode.SPECTATOR) {
+            return;
+        }
+
         Player killer = player.getKiller();
 
         User killed = getUser(player);

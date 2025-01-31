@@ -9,7 +9,6 @@ public class StopCommand implements CommandExecutor {
 
     private final String SYSTEM_PREFIX = "§6[RCS] ";
     private final String NO_GAME_IN_PROGRESS_MESSAGE = SYSTEM_PREFIX + "§cNo game is currently started.";
-    private final String GAME_STOPPED_MESSAGE = SYSTEM_PREFIX + "§4The game has been stopped.";
     private final String INTERNAL_ERROR_MESSAGE = SYSTEM_PREFIX + "§cInternal error, game instance not found.";
     private final String PERMISSION_ERROR_MESSAGE = SYSTEM_PREFIX + "§cYou do not have permission to execute this command.";
 
@@ -31,7 +30,6 @@ public class StopCommand implements CommandExecutor {
             return true;
         }
 
-        sender.sendMessage(GAME_STOPPED_MESSAGE);
         Main.game.endGame();
         return true;
     }
