@@ -46,10 +46,6 @@ public class BossbarManager {
         bossbar.progress(progress);
     }
 
-    public void setProgress(float newProgress) {
-        bossbar.progress(newProgress);
-    }
-
     public void reset() {
         hideFromAll();
         progress = 0.0f;

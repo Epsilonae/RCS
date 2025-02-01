@@ -3,7 +3,6 @@ package org.rcs.config;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -82,9 +81,9 @@ public class ConfigManager {
         try {
             config.save(configFile);
         } catch (IOException e) {
-            logger.log(Level.SEVERE, "Input/output error while saving the configuration file: {0}", e.getMessage());
+            logger.log(Level.SEVERE, String.format("Input/output error while saving the configuration file: %s", e.getMessage()));
         } catch (Exception e) {
-            logger.log(Level.SEVERE, "An error occurred while saving the configuration file: {0}", e.getMessage());
+            logger.log(Level.SEVERE, String.format("An error occurred while saving the configuration file: %s", e.getMessage()));
         }
     }
 
@@ -107,7 +106,7 @@ public class ConfigManager {
 
         Material material = Material.matchMaterial(materialName);
         if (material == null) {
-            logger.log(Level.WARNING, "'{0}' item is invalid in the configuration file.", materialName);
+            logger.log(Level.WARNING, String.format("%s item is invalid in the configuration file.", materialName));
             return new ItemStack(Material.AIR);
         }
 
@@ -126,7 +125,7 @@ public class ConfigManager {
             PotionMeta potionMeta = (PotionMeta) itemStack.getItemMeta();
             PotionEffect potionEffect = parsePotionEffect(parts[1]);
             potionMeta.addCustomEffect(potionEffect, true);
-            potionMeta.displayName(Component.text("Custom Potion").color(TextColor.color(0xFFFFFF)));
+            potionMeta.displayName(Component.text("Potion").color(TextColor.color(0xFFFFFF)));
             itemStack.setItemMeta(potionMeta);
         } 
 
@@ -143,7 +142,7 @@ public class ConfigManager {
         if (enchantmentType != null) {
             meta.addEnchant(enchantmentType, enchantmentLevel, true);
         } else {
-            logger.log(Level.WARNING, "'{0}' enchantment is invalid.", enchantSpecifics[0]);
+            logger.log(Level.WARNING, String.format("%s enchantment is invalid.", enchantSpecifics[0]));
         }
     }
 
@@ -153,7 +152,7 @@ public class ConfigManager {
             int parsedValue = Integer.parseInt(value);
             return Math.max(parsedValue, defaultValue);
         } catch (NumberFormatException e) {
-            logger.log(Level.WARNING, "'{0}' is not a valid number. Default value ({1}) will be used.", new Object[]{value, defaultValue});
+            logger.log(Level.WARNING, String.format("%s is not a valid number. Default value (%s) will be used.", value, defaultValue));
             return defaultValue;
         }
     }
@@ -189,7 +188,7 @@ public class ConfigManager {
     
         PotionEffectType effectType = Registry.POTION_EFFECT_TYPE.get(NamespacedKey.minecraft(effectTypeName));
         if (effectType == null) {
-            logger.log(Level.WARNING, "'{0}' potion effect is invalid in the configuration file.", effectTypeName);
+            logger.log(Level.WARNING, String.format("%s potion effect is invalid in the configuration file.", effectTypeName));
             return null;
         }
     
@@ -233,31 +232,29 @@ public class ConfigManager {
     }
 
     public Map<String, ItemStack> getRoleArmor(String roleName) {
-        String helmetPath = ROLES_PATH + roleName + ".armor.helmet";
-        String chestplatePath = ROLES_PATH + roleName + ".armor.chestplate";
-        String leggingsPath = ROLES_PATH + roleName + ".armor.leggings";
-        String bootsPath = ROLES_PATH + roleName + ".armor.boots";
-    
-        List<String> armorPaths;
-        armorPaths = Arrays.asList(
-                config.getString(helmetPath),
-                config.getString(chestplatePath),
-                config.getString(leggingsPath),
-                config.getString(bootsPath)
-        );
-    
-        List<ItemStack> armorItems = convertStringsToItems(armorPaths);
+        Map<String, String> armorPaths = new HashMap<>();
+        armorPaths.put("helmet", ROLES_PATH + roleName + ".armor.helmet");
+        armorPaths.put("chestplate", ROLES_PATH + roleName + ".armor.chestplate");
+        armorPaths.put("leggings", ROLES_PATH + roleName + ".armor.leggings");
+        armorPaths.put("boots", ROLES_PATH + roleName + ".armor.boots");
     
         Map<String, ItemStack> armorMap = new HashMap<>();
-        String[] armorTypes = {"helmet", "chestplate", "leggings", "boots"};
     
-        for (int i = 0; i < armorTypes.length; i++) {
-            ItemStack item = (i < armorItems.size()) ? armorItems.get(i) : null;
-            armorMap.put(armorTypes[i], item != null ? item : new ItemStack(Material.AIR));
+        for (Map.Entry<String, String> entry : armorPaths.entrySet()) {
+            String armorType = entry.getKey();
+            String path = entry.getValue();
+            String configValue = config.getString(path);
+    
+            if (configValue == null || configValue.isEmpty()) {
+                armorMap.put(armorType, new ItemStack(Material.AIR));
+            } else {
+                ItemStack item = convertStringsToItems(Collections.singletonList(configValue)).get(0);
+                armorMap.put(armorType, item);
+            }
         }
+    
         return armorMap;
     }
-    
     
 
     public List<ItemStack> getRoleItems(String roleName) {

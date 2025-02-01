@@ -8,6 +8,8 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.rcs.config.ConfigManager;
 
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.JoinConfiguration;
+import net.kyori.adventure.text.format.TextColor;
 
 public class DeathMessages implements Listener {
 
@@ -17,14 +19,19 @@ public class DeathMessages implements Listener {
     public void onDeath(PlayerDeathEvent e) {
         Player player = e.getPlayer();
         Player killer = player.getKiller();
-        String message;
+        Component playerComponent = Component.text(player.getName()).color(TextColor.color(0xFF5555));
         if (killer != null) {
-            message = "§c" + player.getName() + "§7 " + config.getRandomDeathMessage() + "§6 " + killer.getName();
+            Component killerComponent = Component.text(killer.getName()).color(TextColor.color(0x00AAAA));
+            Component deathComponent = Component.text(config.getRandomDeathMessage()).color(TextColor.color(0xAAAAAA));
+            Component message = Component.join(JoinConfiguration.separator(Component.text(" ")), playerComponent, deathComponent, killerComponent);
+            Bukkit.broadcast(message);
         } else {
-            message = "§c" + player.getName() + "§7 " + config.getSuicideMessage();
+            Component suicideComponent = Component.text(config.getSuicideMessage()).color(TextColor.color(0xAAAAAA));
+            Component message = Component.join(JoinConfiguration.separator(Component.text(" ")), playerComponent, suicideComponent);
+            Bukkit.broadcast(message);
         }
-        Component componentMessage = Component.text(message);
-        Bukkit.broadcast(componentMessage);
+        
+        
     }
     
 }

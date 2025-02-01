@@ -89,8 +89,11 @@ public class GameManager {
         new BukkitRunnable() {
             @Override
             public void run() {
-                if (user.getPlayer().getHealth() > 0.0) {
+                Player player = user.getPlayer();
+                if (player.getHealth() > 0.0) {
                     respawnPlayer(user);
+                    player.setHealth(20);
+                    player.setFoodLevel(20);
                     cancel();
                 }
             }
@@ -208,7 +211,7 @@ public class GameManager {
 
     private void handleInventoryEvents() {
         if ((gameTime + 1) % inventoryTime == 0) {
-            bossbarManager.addProgress(0f);
+            bossbarManager.addProgress(-1.0f);
             for (Player player : Bukkit.getOnlinePlayers()) {
                 InventoryGUI inventory = new InventoryGUI();
                 inventory.initializeInventory();
