@@ -42,7 +42,7 @@ public class GameListener implements Listener {
         if (event.getCause() == EntityDamageEvent.DamageCause.VOID) {
             if (game.isGameOn()) {
                 player.removePotionEffect(PotionEffectType.DARKNESS);
-                player.addPotionEffect(new PotionEffect(PotionEffectType.DARKNESS, 20, 1));
+                player.addPotionEffect(new PotionEffect(PotionEffectType.DARKNESS, 20, 0));
             }
         }
     }

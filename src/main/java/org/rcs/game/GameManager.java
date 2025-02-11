@@ -10,6 +10,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.GameRule;
 import org.bukkit.World;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.rcs.Main;
@@ -85,6 +86,7 @@ public class GameManager {
         }
     }
 
+    @SuppressWarnings("null")
     private void respawnAfterDeath(User user) {
         new BukkitRunnable() {
             @Override
@@ -92,6 +94,7 @@ public class GameManager {
                 Player player = user.getPlayer();
                 if (player.getHealth() > 0.0) {
                     respawnPlayer(user);
+                    player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(20);
                     player.setHealth(20);
                     player.setFoodLevel(20);
                     cancel();
